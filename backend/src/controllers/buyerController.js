@@ -15,6 +15,38 @@ export const getProductDetails = async (req, res) => {
   }
 };
 
+export const getAllProducts = async (req, res) => {
+  try {
+    const products = await Product.find().populate('seller', 'storeName email');
+    res.json({ data: products });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const searchProducts = async (req, res) => {
+  try {
+    const { name, tag } = req.query;
+
+    // Build a dynamic query object
+    const query = {};
+
+    if (name) {
+      query.name = { $regex: name, $options: 'i' }; // Case-insensitive name match
+    }
+
+    if (tag) {
+      query.tags = { $in: [new RegExp(tag, 'i')] }; // Case-insensitive tag match
+    }
+
+    const products = await Product.find(query).populate('seller', 'storeName email');
+
+    res.json({ data: products });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 
 //Add to likes incl product and tags too.
@@ -43,34 +75,58 @@ export const addToLikes = async (req, res) => {
 
 export const followSeller = async (req, res) => {
   try {
-    const { sellerId } = req.params;
+    const { sellerId } = req.body; // ✅ Get sellerId from request body
+
     const seller = await Seller.findById(sellerId);
     if (!seller) {
       return res.status(404).json({ error: 'Seller not found' });
     }
-    const buyer = req.user; // Assumes buyer is attached in auth middleware
+
+    const buyer = await Buyer.findById(req.user._id); // ✅ Full buyer document
     if (!buyer.following.includes(sellerId)) {
       buyer.following.push(sellerId);
       await buyer.save();
     }
+
     res.status(200).json({ message: 'Seller followed', following: buyer.following });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
+
 // Unfollow a seller
 export const unfollowSeller = async (req, res) => {
   try {
-    const { sellerId } = req.params;
-    const buyer = req.user;
+    const { sellerId } = req.body;
+
+    const buyer = await Buyer.findById(req.user._id);
     buyer.following = buyer.following.filter(id => id.toString() !== sellerId);
     await buyer.save();
+
     res.status(200).json({ message: 'Seller unfollowed', following: buyer.following });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+export const getFollowingStories = async (req, res) => {
+  try {
+    // Get buyer from DB to get the latest following list
+    const buyer = await Buyer.findById(req.user._id);
+
+    // Fetch stories where seller is in buyer.following
+    const stories = await Story.find({ seller: { $in: buyer.following } })
+      .populate('seller', 'storeName') // populate only storeName of the seller
+      .sort({ createdAt: -1 }); // Optional: newest first
+
+    res.status(200).json({ data: stories });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 //Profile of a seller.
 export const getSellerProfile = async (req, res) => {

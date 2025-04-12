@@ -29,14 +29,14 @@ const router = express.Router();
 
 
 // Dashboard Summary
-router.get('/dashboard', authenticate,protectSeller, getSellerDashboard);
+router.get('/dashboard', authenticate,protectSeller, getSellerDashboard); //working
 
 // Products
-router.post('/product',authenticate, protectSeller, addProduct);
-router.get('/products', authenticate,protectSeller, getMyProducts);
-router.put('/product/:id',authenticate, protectSeller, updateProduct);
-router.delete('/product/:id',authenticate, protectSeller, deleteProduct);
-router.post('/products/bulk-delete',authenticate, protectSeller, bulkDeleteProducts);
+router.post('/product',authenticate, protectSeller, addProduct);//working
+router.get('/products', authenticate,protectSeller, getMyProducts);//working
+router.put('/product/:id',authenticate, protectSeller, updateProduct);//working
+router.delete('/product/:id',authenticate, protectSeller, deleteProduct);//working
+router.post('/products/bulk-delete',authenticate, protectSeller, bulkDeleteProducts);//working
 router.patch('/product/:id/toggle-stock',authenticate, protectSeller, toggleProductStockStatus);
 
 // Orders
@@ -46,13 +46,13 @@ router.patch('/orders/:id/ship',authenticate, protectSeller, markOrderShipped);
 router.get('/orders/completed',authenticate, protectSeller, getCompletedOrders);
 
 //Profile
-router.get('/profile',authenticate, protectSeller, getSellerProfile);
-router.put('/profile',authenticate, protectSeller, updateSellerProfile);
+router.get('/profile',authenticate, protectSeller, getSellerProfile);//working
+router.put('/profile',authenticate, protectSeller, updateSellerProfile);//working
 
 
-router.post('/story', authenticate,protectSeller, addStory);
-router.get('/stories', authenticate,protectSeller, getMyStories);
-router.delete('/story/:id',authenticate, protectSeller, deleteStory);
+router.post('/story', authenticate,protectSeller, addStory);//working
+router.get('/stories', authenticate,protectSeller, getMyStories);//working
+router.delete('/story/:id',authenticate, protectSeller, deleteStory);//working
 
 
 router.get('/analytics',authenticate, protectSeller, getAnalytics);

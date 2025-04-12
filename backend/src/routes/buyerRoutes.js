@@ -12,19 +12,20 @@ import {
   getLikedProducts,
   removeFromLikes,
   moveLikeToCart,
-  moveCartToLike
+  moveCartToLike,
+  searchProducts,
+  getAllProducts,
+  getFollowingStories
 } from '../controllers/buyerController.js';
 
 const router = express.Router();
 
-
-router.get('/product/:id',authenticate, protectBuyer, getProductDetails);
-
-
-router.post('/seller/follow/:sellerId',authenticate, protectBuyer, followSeller);
-router.delete('/seller/unfollow/:sellerId',authenticate, protectBuyer, unfollowSeller);
-
-
+router.get('/products', authenticate, protectBuyer, getAllProducts);//working
+router.get('/products/search', authenticate, protectBuyer, searchProducts); // working 
+router.get('/product/:id',authenticate, protectBuyer, getProductDetails);//working
+router.post('/seller/follow',authenticate, protectBuyer, followSeller);//working
+router.delete('/seller/unfollow',authenticate, protectBuyer, unfollowSeller);//working
+router.get('/stories/following',authenticate, protectBuyer, getFollowingStories);//working
 
 router.get('/products/recommendations',authenticate, protectBuyer, getRecommendations);
 
