@@ -1,0 +1,36 @@
+/project-root
+├── /src
+│   ├── /config
+│   │   └── db.js                // MongoDB Atlas connection and config
+│   ├── /controllers
+│   │   ├── authController.js    // Shared authentication logic (login/signup)
+│   │   ├── buyerController.js   // Buyer endpoints and logic
+│   │   ├── sellerController.js  // Seller endpoints and logic (including stories)
+│   │   ├── adminController.js   // Admin endpoints and moderation
+│   │   └── storyController.js   // Seller Story endpoints (CRUD for stories)
+│   ├── /middlewares
+│   │   ├── authMiddleware.js    // JWT verification and authorization
+│   │   └── errorHandler.js      // Global error handling middleware
+│   ├── /models
+│   │   ├── Buyer.js             // Buyer Mongoose model
+│   │   ├── Seller.js            // Seller Mongoose model
+│   │   ├── Admin.js             // Admin Mongoose model
+│   │   ├── Product.js           // Product Mongoose model
+│   │   ├── Order.js             // Order Mongoose model
+│   │   ├── Cart.js              // Cart/likes model (can be embedded in Buyer)
+│   │   └── Story.js             // Seller Story model (expires in 24hrs)
+│   ├── /routes
+│   │   ├── authRoutes.js        // Public authentication routes
+│   │   ├── buyerRoutes.js       // Routes for buyers
+│   │   ├── sellerRoutes.js      // Routes for sellers
+│   │   ├── adminRoutes.js       // Routes for admin
+│   │   └── storyRoutes.js       // Routes for seller stories
+│   ├── /services
+│   │   └── recommendationService.js  // Service to record swipe interactions 
+│   ├── /utils
+│   │   └── logger.js            // Logging utilities (e.g., using winston or similar)
+│   └── app.js                   // Express application setup
+├── /tests                       // Unit/integration tests (not shown)
+├── .env                         // Environment variables (MongoDB URI, JWT secret, etc.)
+├── package.json
+└── index.js                     // Server entry point
