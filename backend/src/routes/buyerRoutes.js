@@ -27,18 +27,18 @@ router.post('/seller/follow',authenticate, protectBuyer, followSeller);//working
 router.delete('/seller/unfollow',authenticate, protectBuyer, unfollowSeller);//working
 router.get('/stories/following',authenticate, protectBuyer, getFollowingStories);//working
 
-router.get('/products/recommendations',authenticate, protectBuyer, getRecommendations);
+router.get('/products/recommendations',authenticate, protectBuyer, getRecommendations);///working
 
-router.post('/cart/add',authenticate, protectBuyer, addToCart);
-router.get('/cart',authenticate, protectBuyer, getCartItems);
-router.delete('/cart/remove/:productId',authenticate, protectBuyer, removeFromCart);
+router.post('/cart/add',authenticate, protectBuyer, addToCart);//working
+router.get('/cart',authenticate, protectBuyer, getCartItems);//working
+router.delete('/cart/remove/:productId',authenticate, protectBuyer, removeFromCart);//working
 
-router.post('/likes/add',authenticate, protectBuyer, addToLikes);
-router.get('/likes',authenticate, protectBuyer, getLikedProducts);
-router.delete('/likes/remove/:productId',authenticate, protectBuyer, removeFromLikes);
+router.post('/likes/add',authenticate, protectBuyer, addToLikes);//working
+router.get('/likes',authenticate, protectBuyer, getLikedProducts);//working
+router.delete('/likes/remove/:productId',authenticate, protectBuyer, removeFromLikes);//working
 
-router.post('/likes/move-to-cart',authenticate, protectBuyer, moveLikeToCart);
-router.post('/cart/move-to-likes',authenticate, protectBuyer, moveCartToLike);
+router.post('/likes/move-to-cart',authenticate, protectBuyer, moveLikeToCart);//working
+router.post('/cart/move-to-likes',authenticate, protectBuyer, moveCartToLike);//working
 
 export default router;
 
