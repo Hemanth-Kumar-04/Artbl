@@ -385,3 +385,75 @@ export const getRecommendations = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+//// PRODUCT ORDERING
+import Order from '../models/Order.js';
+
+export const placeOrder = async (req, res) => {
+  try {
+    const buyer = await Buyer.findById(req.user._id).populate('cart.product');
+
+    if (!buyer || buyer.cart.length === 0) {
+      return res.status(400).json({ error: 'Cart is empty or buyer not found' });
+    }
+
+    const orderItems = buyer.cart.map(item => ({
+      product: item.product._id,
+      quantity: item.quantity,
+      priceAtPurchase: item.product.price,
+      seller: item.product.seller // assuming product has a "seller" field
+    }));
+
+    const totalAmount = orderItems.reduce((sum, item) => sum + item.quantity * item.priceAtPurchase, 0);
+
+    const order = await Order.create({
+      buyer: buyer._id,
+      products: orderItems,
+      totalAmount
+    });
+
+    buyer.cart = [];
+    await buyer.save();
+
+    res.status(201).json({ message: 'Order placed', order });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getBuyerOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({ buyer: req.user._id })
+      .populate('products.product', 'name price images')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ orders });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getOrderStatusById = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    const order = await Order.findOne({ _id: orderId, buyer: req.user._id })
+      .populate('products.product', 'name price images')
+      .populate('products.seller', 'username');
+
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    res.status(200).json({
+      orderId: order._id,
+      status: order.status,
+      totalAmount: order.totalAmount,
+      orderedAt: order.orderedAt,
+      products: order.products
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

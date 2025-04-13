@@ -15,7 +15,10 @@ import {
   moveCartToLike,
   searchProducts,
   getAllProducts,
-  getFollowingStories
+  getFollowingStories,
+  getOrderStatusById,
+  getBuyerOrders,
+  placeOrder
 } from '../controllers/buyerController.js';
 
 const router = express.Router();
@@ -40,6 +43,10 @@ router.delete('/likes/remove/:productId',authenticate, protectBuyer, removeFromL
 router.post('/likes/move-to-cart',authenticate, protectBuyer, moveLikeToCart);//working
 router.post('/cart/move-to-likes',authenticate, protectBuyer, moveCartToLike);//working
 
+//ORDER ROUTES
+router.post('/order',authenticate, protectBuyer, placeOrder);
+router.get('/orders',authenticate, protectBuyer, getBuyerOrders);
+router.get('/order/:orderId/status',authenticate, protectBuyer, getOrderStatusById);
 export default router;
 
 
