@@ -44,9 +44,9 @@ router.post('/likes/move-to-cart',authenticate, protectBuyer, moveLikeToCart);//
 router.post('/cart/move-to-likes',authenticate, protectBuyer, moveCartToLike);//working
 
 //ORDER ROUTES
-router.post('/order',authenticate, protectBuyer, placeOrder);
-router.get('/orders',authenticate, protectBuyer, getBuyerOrders);
-router.get('/order/:orderId/status',authenticate, protectBuyer, getOrderStatusById);
+router.post('/order',authenticate, protectBuyer, placeOrder);//working
+router.get('/orders',authenticate, protectBuyer, getBuyerOrders);//working
+router.get('/order/:orderId/status',authenticate, protectBuyer, getOrderStatusById);//working
 export default router;
 
 

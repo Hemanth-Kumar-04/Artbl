@@ -57,6 +57,8 @@ router.get('/stories', authenticate,protectSeller, getMyStories);//working
 router.delete('/story/:id',authenticate, protectSeller, deleteStory);//working
 
 {/* NOT FOR NOW
+
+
 router.get('/analytics',authenticate, protectSeller, getAnalytics);
 
 
@@ -66,7 +68,9 @@ router.delete('/notifications/clear',authenticate, protectSeller, clearNotificat
 
 
 router.put('/settings',authenticate, protectSeller, updateSellerSettings);
+
 */}
+
 //Orders 
 router.get('/orders',authenticate, protectSeller, getSellerOrders);//working
 router.patch('/orders/:id',authenticate,protectSeller,updateOrderStatus);//working

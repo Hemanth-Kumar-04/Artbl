@@ -90,43 +90,73 @@ export const addToLikes = async (req, res) => {
 
 export const followSeller = async (req, res) => {
   try {
-    const { sellerId } = req.body; // ✅ Get sellerId from request body
+    const { sellerId } = req.body; // Get sellerId from request body
 
+    // Find seller document
     const seller = await Seller.findById(sellerId);
     if (!seller) {
       return res.status(404).json({ error: "Seller not found" });
     }
 
-    const buyer = await Buyer.findById(req.user._id); // ✅ Full buyer document
+    // Find full buyer document
+    const buyer = await Buyer.findById(req.user._id);
+
+    // Add seller id to buyer.following if not already there
     if (!buyer.following.includes(sellerId)) {
       buyer.following.push(sellerId);
       await buyer.save();
     }
 
-    res
-      .status(200)
-      .json({ message: "Seller followed", following: buyer.following });
+    // Optional: Update seller.followers field (if your schema has it)
+    if (!seller.followers) {
+      seller.followers = []; // In case it's not set
+    }
+    if (!seller.followers.includes(buyer._id)) {
+      seller.followers.push(buyer._id);
+      await seller.save();
+    }
+
+    res.status(200).json({
+      message: "Seller followed",
+      following: buyer.following,
+      sellerFollowers: seller.followers
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// Unfollow a seller
+
 export const unfollowSeller = async (req, res) => {
   try {
     const { sellerId } = req.body;
+
+    // Find full buyer document
     const buyer = await Buyer.findById(req.user._id);
     buyer.following = buyer.following.filter(
       (id) => id.toString() !== sellerId
     );
     await buyer.save();
-    res
-      .status(200)
-      .json({ message: "Seller unfollowed", following: buyer.following });
+
+    // Also update seller's followers if applicable
+    const seller = await Seller.findById(sellerId);
+    if (seller && seller.followers) {
+      seller.followers = seller.followers.filter(
+        (id) => id.toString() !== buyer._id.toString()
+      );
+      await seller.save();
+    }
+
+    res.status(200).json({ 
+      message: "Seller unfollowed", 
+      following: buyer.following, 
+      sellerFollowers: seller ? seller.followers : [] 
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 export const getFollowingStories = async (req, res) => {
   try {
