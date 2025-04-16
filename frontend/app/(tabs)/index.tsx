@@ -1,11 +1,15 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View ,ScrollView} from 'react-native';
 import OrderCard  from '@/components/order/OrderCard';
 import SavedItemCard from '@/components/order/SavedItemCard';
 import LikedItemCard from '@/components/order/LikedItemCard';
+import ProductCard from '@/components/order/ProductCard';
+import BlackButton from '@/components/order/BlackButton';
 export default function HomeScreen() {
   return (
     <>
+    <ScrollView>
+
     <View style={styles.container}>
       <OrderCard
         image="https://example.com/dress.jpg"
@@ -37,9 +41,22 @@ export default function HomeScreen() {
               onEdit={() => console.log('Editing...')}
               onMove={() => console.log('Moving...')}
               onDelete={() => console.log('Deleting...')}          
+              />
+
+          <BlackButton
+              title="Add to Cart"
+              onPress={() => console.log('Adding to cart...')}
           />
+          
+          <ProductCard
+              image="https://example.com/dress.jpg"
+              title="Forever New bow back mini dresses in ivory"
+              price={158.00}          
+              />
     </View>
+  </ScrollView>
   </>
+
   );
 }
 
