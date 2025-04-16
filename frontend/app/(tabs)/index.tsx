@@ -5,6 +5,9 @@ import SavedItemCard from '@/components/order/SavedItemCard';
 import LikedItemCard from '@/components/order/LikedItemCard';
 import ProductCard from '@/components/order/ProductCard';
 import BlackButton from '@/components/order/BlackButton';
+import IntrestButton from '@/components/order/IntrestButton';
+import WhiteButton from  '@/components/order/WhiteButton';
+
 export default function HomeScreen() {
   return (
     <>
@@ -42,6 +45,16 @@ export default function HomeScreen() {
               onMove={() => console.log('Moving...')}
               onDelete={() => console.log('Deleting...')}          
               />
+
+              <IntrestButton
+              title="Trousers"
+              image={"https://example.com/heart-icon.png"}
+              onPress={() => console.log('Adding to wishlist...')}
+              />
+          <WhiteButton
+              title="Add to Wishlist"
+              onPress={() => console.log('Adding to wishlist...')}          
+          />
 
           <BlackButton
               title="Add to Cart"
