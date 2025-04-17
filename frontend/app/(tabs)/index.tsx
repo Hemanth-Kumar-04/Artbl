@@ -1,9 +1,23 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
+import {
+  SafeAreaView,
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Dimensions
+} from 'react-native';
 import Swiper from 'react-native-deck-swiper';
 import InstaStory from 'react-native-insta-story';
 
 const { width, height } = Dimensions.get('window');
+
+// tweak these to make cards smaller/larger
+const CARD_WIDTH  = width * 0.80;
+const CARD_HEIGHT = height * 0.72;
+
+// height of your stories row
+const STORY_HEIGHT = 100;
 
 const App = () => {
   const stories = [
@@ -12,14 +26,8 @@ const App = () => {
       user_image: 'https://randomuser.me/api/portraits/men/1.jpg',
       user_name: 'john_doe',
       stories: [
-        {
-          story_id: 'story1',
-          story_image: 'https://picsum.photos/400/700?random=1',
-        },
-        {
-          story_id: 'story2',
-          story_image: 'https://picsum.photos/400/700?random=2',
-        },
+        { story_id: 's1', story_image: 'https://picsum.photos/400/700?random=1' },
+        { story_id: 's2', story_image: 'https://picsum.photos/400/700?random=2' },
       ],
     },
     {
@@ -27,10 +35,7 @@ const App = () => {
       user_image: 'https://randomuser.me/api/portraits/women/2.jpg',
       user_name: 'jane_doe',
       stories: [
-        {
-          story_id: 'story3',
-          story_image: 'https://picsum.photos/400/700?random=3',
-        },
+        { story_id: 's3', story_image: 'https://picsum.photos/400/700?random=3' },
       ],
     },
   ];
@@ -39,104 +44,140 @@ const App = () => {
     {
       id: 1,
       image: 'https://picsum.photos/300/500?random=4',
-      name: 'Card 1',
+      name: 'maximullian',
+      price: 43.00,
     },
     {
       id: 2,
       image: 'https://picsum.photos/300/500?random=5',
-      name: 'Card 2',
+      name: 'bella_style',
+      price: 55.99,
     },
     {
       id: 3,
       image: 'https://picsum.photos/300/500?random=6',
-      name: 'Card 3',
+      name: 'trend_setter',
+      price: 37.50,
     },
   ];
 
-  const handleStorySeen = (story_id) => {
-    console.log('Story seen:', story_id);
-  };
-
-  const handleStoryClose = () => {
-    console.log('Story closed');
-  };
-
   return (
-    <View style={styles.container}>
-      {/* Stories Section */}
-      <View style={styles.storyContainer}>
+    <SafeAreaView style={styles.container}>
+      {/* 1) absolutely positioned stories bar */}
+      <View style={styles.overlayStories}>
         <InstaStory
           data={stories}
-          duration={10}
-          onStorySeen={(item) => handleStorySeen(item.story_id)}
-          onClose={handleStoryClose}
+          duration={8}
+          onStorySeen={item => console.log('seen', item.story_id)}
+          onClose={() => console.log('closed')}
         />
       </View>
 
-      {/* Swipable Cards Section */}
-      <View style={styles.swiperContainer}>
+      {/* 2) swiper sits underneath, pushed down by paddingTop */}
+      <View style={styles.swiperWrapper}>
         <Swiper
           cards={cards}
-          renderCard={(card) => (
+          containerStyle={styles.swiperFullScreen}
+          renderCard={card => (
             <View style={styles.card}>
               <Image source={{ uri: card.image }} style={styles.image} />
-              <Text style={styles.cardText}>{card.name}</Text>
+
+              <View style={styles.overlayUsername}>
+                <Text style={styles.username}>{card.name}</Text>
+              </View>
+
+              <View style={styles.footer}>
+                <Text style={styles.footerText}>VIEW SAVEDITEMS</Text>
+                <Text style={styles.price}>$ {card.price}</Text>
+              </View>
             </View>
           )}
-          onSwipedLeft={(index) => console.log('Swiped left', index)}
-          onSwipedRight={(index) => console.log('Swiped right', index)}
           infinite
-          backgroundColor={'transparent'}  // keep background color transparent
+          backgroundColor="transparent"
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  // Entire screen: white background
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  // Story container: top portion
-  storyContainer: {
-    flex: 0.2,        // Adjust for how tall you want the stories section
-    backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
+  container: { flex: 1, backgroundColor: '#fff' },
 
-  },
-  // Swiper container: remaining portion
-  swiperContainer: {
-    marginTop: -20,
-    flex: 0.8,
-    backgroundColor: '#FFFFFF',
+  overlayStories: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: STORY_HEIGHT,
+    backgroundColor: '#fff',
+    marginTop:25,
+    zIndex: 10,
     justifyContent: 'center',
   },
-  // Card styling
-  card: {
+
+  swiperWrapper: {
     flex: 1,
-    marginHorizontal: 20,
-    marginVertical: 30,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#E8E8E8',
-    backgroundColor: '#FFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop:-60,
+    paddingTop: STORY_HEIGHT,
+    marginTop:90,
   },
+
+  swiperFullScreen: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  
+  },
+
+  card: {
+  
+    width: CARD_WIDTH,
+    height: CARD_HEIGHT,
+    borderRadius: 15,
+    overflow: 'hidden',
+    alignSelf: 'center',
+    backgroundColor: '#000',
+    position: 'relative',
+  },
+
   image: {
-    width: width * 0.6,
-    height: height * 0.4,
-    borderRadius: 10,
-    marginBottom: 10,
+    width: '100%',
+    height: '100%',
     resizeMode: 'cover',
   },
-  cardText: {
-    fontSize: 18,
+
+  overlayUsername: {
+    position: 'absolute',
+    top: 15,
+    left: 15,
+    backgroundColor: '#00000070',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+  },
+
+  username: {
+    color: '#fff',
     fontWeight: '600',
-    color: '#333',
+    fontSize: 14,
+  },
+
+  footer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+  },
+
+  footerText: {
+    color: '#fff',
+    fontSize: 12,
+    marginBottom: 5,
+    opacity: 0.85,
+  },
+
+  price: {
+    color: '#fff',
+    fontSize: 22,
+    fontWeight: 'bold',
   },
 });
 
