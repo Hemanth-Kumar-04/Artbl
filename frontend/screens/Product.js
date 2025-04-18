@@ -9,10 +9,9 @@ export default function Product() {
   return (
     <ScrollView style={styles.container}>
       <Image
-  source={{ uri: 'https://source.unsplash.com/random/400x700' }}
-  style={styles.image}
-/>
-
+        source={require('./assets/product.jpg')} // Replace with your image
+        style={styles.image}
+      />
       
       <View style={styles.iconRow}>
         <AntDesign name="arrowleft" size={24} color="black" />
